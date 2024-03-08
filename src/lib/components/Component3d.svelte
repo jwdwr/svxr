@@ -15,7 +15,15 @@
 
 {#if is3d}
 	<a-entity position={`${x} ${y} ${z}`} dragndrop>
-		<a-plane id="plane" position={`0 0 -0.01`} {width} {height} color="#7BC8A4"></a-plane>
+		<a-box
+			depth="0.03"
+			id="plane"
+			position={`0 0 -0.03001`}
+			{width}
+			{height}
+			color="#7BC8A4"
+			opacity="0.5"
+		/>
 		<a-entity class="screen" htmlembed="ppu: 1500">
 			<slot />
 		</a-entity>

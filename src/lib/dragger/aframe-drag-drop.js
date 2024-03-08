@@ -46,17 +46,31 @@ AFRAME.registerComponent('dragndrop', {
 			}
 		});
 
-		this.el.object3D.children[0].el.addEventListener('raycaster-intersected', () => {
+		const [frame, window] = this.el.object3D.children;
+
+		frame.el.addEventListener('raycaster-intersected', () => {
 			this.el.addState('raycasted');
+			const frameMaterial = frame.el.getObject3D('mesh').material;
+			frameMaterial.opacity = 1;
+			frameMaterial.needsUpdate = true;
 		});
-		this.el.object3D.children[1].el.addEventListener('raycaster-intersected', () => {
+		window.el.addEventListener('raycaster-intersected', () => {
+			const frameMaterial = frame.el.getObject3D('mesh').material;
+			frameMaterial.opacity = 0.5;
+			frameMaterial.needsUpdate = true;
 			this.el.removeState('raycasted');
 		});
-		this.el.object3D.children[1].el.addEventListener('raycaster-intersected-cleared', () => {
+		window.el.addEventListener('raycaster-intersected-cleared', () => {
 			this.el.addState('raycasted');
+			const frameMaterial = frame.el.getObject3D('mesh').material;
+			frameMaterial.opacity = 1;
+			frameMaterial.needsUpdate = true;
 		});
-		this.el.object3D.children[0].el.addEventListener('raycaster-intersected-cleared', () => {
+		frame.el.addEventListener('raycaster-intersected-cleared', () => {
 			this.el.removeState('raycasted');
+			const frameMaterial = frame.el.getObject3D('mesh').material;
+			frameMaterial.opacity = 0.5;
+			frameMaterial.needsUpdate = true;
 		});
 
 		this.direction = new AFRAME.THREE.Vector3();
