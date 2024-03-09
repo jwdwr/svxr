@@ -7,14 +7,15 @@
 	export let position: [number, number, number] = [0, 0, 0];
 	export let width = 1;
 	export let height = 1;
+	export let draggable = false;
 
-	console.log({ position });
+	const dragndrop = draggable ? 'dragndrop' : undefined;
 
 	const [x, y, z] = position;
 </script>
 
 {#if is3d}
-	<a-entity position={`${x} ${y} ${z}`} dragndrop>
+	<a-entity position={`${x} ${y} ${z}`} {dragndrop}>
 		<a-box
 			depth="0.03"
 			id="plane"
