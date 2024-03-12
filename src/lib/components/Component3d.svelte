@@ -1,7 +1,8 @@
 <script lang="ts">
 	import 'aframe';
-	import '../renderer/aframe-htmlembed-component';
-	import '../dragger/aframe-drag-drop';
+	import '../aframe/aframe-htmlembed-component';
+	import '../aframe/aframe-drag-drop';
+	import '../aframe/rounded-box';
 	export let is3d = false;
 
 	export let position: [number, number, number] = [0, 0, 0];
@@ -16,22 +17,28 @@
 
 {#if is3d}
 	<a-entity position={`${x} ${y} ${z}`} {dragndrop}>
-		<a-box
-			depth="0.03"
+		<a-entity
+			rounded-box={`width: ${width + 0.05}; height: ${height + 0.05}; depth: 0.02; radiusCorner: 0.07; smoothness: 15`}
 			id="plane"
-			position={`0 0 -0.03001`}
-			{width}
-			{height}
+			position={`0 0 -0.01`}
 			color="#7BC8A4"
 			opacity="0.5"
 		/>
-		<a-entity class="screen" htmlembed="ppu: 1500">
+		<a-entity
+			class="screen"
+			htmlembed="width:{width}; height:{height}; depth: 0.01"
+			{width}
+			{height}
+			style="--width:{width}; --height:{height}; depth: 0.01"
+		>
 			<slot />
 		</a-entity>
 	</a-entity>
 {:else}
-	<div class="screen">
-		<slot />
+	<div class="screen" style="--width:{width}; --height:{height}">
+		<div class="content">
+			<slot />
+		</div>
 	</div>
 {/if}
 
@@ -67,5 +74,20 @@
 	}
 	a-entity[htmlembed] {
 		display: none;
+	}
+
+	.screen {
+		width: calc(var(--width) * 600px);
+		height: calc(var(--height) * 600px);
+		max-width: calc(var(--width) * 600px);
+		max-height: calc(var(--height) * 600px);
+		background-color: transparent;
+		border-radius: 16px;
+		overflow: hidden;
+	}
+
+	.content {
+		height: 100%;
+		display: flow-root;
 	}
 </style>

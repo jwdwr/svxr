@@ -11,6 +11,9 @@ export class Renderer {
 	private width = 0;
 	private height = 0;
 
+	public innerWidth = 0;
+	public innerHeight = 0;
+
 	// Create the canvas to be drawn to
 	public canvas = document.createElement('canvas') as HTMLCanvasElement;
 	private ctx = this.canvas.getContext('2d') as CanvasRenderingContext2D;
@@ -93,6 +96,8 @@ export class Renderer {
 			this.html.style.display = 'block';
 			// If embeded html elements dimensions have change then update the canvas
 			if (this.width != this.html.offsetWidth || this.height != this.html.offsetHeight) {
+				this.innerWidth = this.html.offsetWidth;
+				this.innerHeight = this.html.offsetHeight;
 				this.width = this.html.offsetWidth * 4;
 				this.height = this.html.offsetHeight * 4;
 				this.canvas.width = this.width;

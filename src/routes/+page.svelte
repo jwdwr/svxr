@@ -4,7 +4,7 @@
 	import { generateAndRender } from '$lib/generator/generator';
 	import Microphone from 'virtual:icons/lucide/mic';
 
-	let showComponent = false;
+	let showComponent = true;
 	let is3d = false;
 
 	let text: string = '';
@@ -71,7 +71,7 @@
 			scale="0.5 0.5 0.5"
 		></a-entity>
 	{/if}
-	<Component3d position={[0, 1.5, -1]} {is3d} height={1.5} width={1.5}>
+	<Component3d position={[0, 1.5, -1]} {is3d} height={1} width={1.5}>
 		<div id="page">
 			<p>What do you want to see?</p>
 			<div class="speak-input">
@@ -82,7 +82,7 @@
 		</div>
 	</Component3d>
 	{#if showComponent}
-		<Component3d position={[0, 1.8, -0.8]} {is3d} height={0.3} width={0.3}>
+		<Component3d position={[0, 1.8, -0.8]} {is3d} height={0.3} width={0.3} draggable>
 			<div id="component">{text}</div>
 		</Component3d>
 	{/if}
@@ -91,10 +91,10 @@
 <style>
 	#page {
 		font-family: Arial, Helvetica, sans-serif;
-		width: 500px;
-		height: 500px;
 		background-color: black;
 		color: white;
+		height: 100%;
+		padding: 8px;
 	}
 
 	button:hover {
@@ -104,8 +104,8 @@
 	#component {
 		background-color: darkslateblue;
 		color: white;
-		height: 100px;
-		width: 100px;
+		height: 100%;
+		display: flow-root;
 		display: flex;
 		place-content: center;
 		place-items: center;

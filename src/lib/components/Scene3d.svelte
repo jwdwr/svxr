@@ -3,7 +3,7 @@
 </script>
 
 {#if is3d}
-	<a-scene>
+	<a-scene renderer="maxCanvasWidth: 3000; maxCanvasHeight: 3000">
 		<slot />
 
 		<a-entity id="cameraRig">

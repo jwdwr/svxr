@@ -7,14 +7,17 @@ if (typeof AFRAME === 'undefined') {
 
 const useCanvas = false;
 
-import { Renderer } from './Renderer';
+import { Renderer } from '../renderer/Renderer';
+import { RoundedBoxFlat } from './RoundedBoxFlat';
 
 AFRAME.registerComponent('htmlembed', {
 	schema: {
-		ppu: {
-			type: 'number',
-			default: 256
-		}
+		width: { type: 'number', default: 5 },
+		height: { type: 'number', default: 4 },
+		depth: { type: 'number', default: 0.1 },
+		radiusCorner: { type: 'number', default: 0.05 },
+		smoothness: { type: 'number', default: 10 },
+		uStartQuadr: { type: 'number', default: 2 }
 	},
 	init: function () {
 		const renderer = new Renderer(
@@ -49,12 +52,32 @@ AFRAME.registerComponent('htmlembed', {
 		texture.magFilter = THREE.LinearFilter; // Or THREE.LinearFilter
 		texture.wrapS = THREE.ClampToEdgeWrapping;
 		texture.wrapT = THREE.ClampToEdgeWrapping;
-		const material = new THREE.MeshBasicMaterial({
-			map: texture,
-			transparent: true
-		});
-		const geometry = new THREE.PlaneGeometry();
-		const screen = new THREE.Mesh(geometry, material);
+
+		const data = this.data;
+		const geometry = RoundedBoxFlat(
+			data.width,
+			data.height,
+			data.depth,
+			data.radiusCorner,
+			data.smoothness,
+			data.uStartQuadr
+		);
+
+		const materials = [
+			new THREE.MeshBasicMaterial({
+				map: texture,
+				transparent: true
+			}),
+			new THREE.MeshStandardMaterial({
+				color: 0xdddddd,
+				transparent: true
+			}),
+			new THREE.MeshStandardMaterial({
+				color: 0xdddddd,
+				transparent: true
+			})
+		];
+		const screen = new THREE.Mesh(geometry, materials);
 		this.el.setObject3D('screen', screen);
 		this.screen = screen;
 
@@ -66,7 +89,6 @@ AFRAME.registerComponent('htmlembed', {
 			this.raycaster = null;
 		});
 		this.el.addEventListener('mousedown', (evt) => {
-			console.log('heard mousedown');
 			if (evt instanceof CustomEvent) {
 				this.renderer.listener.mousedown(this.lastX, this.lastY);
 			} else {
@@ -82,12 +104,7 @@ AFRAME.registerComponent('htmlembed', {
 		});
 		this.resize();
 	},
-	resize() {
-		this.width = this.renderer.width / this.data.ppu;
-		this.height = this.renderer.height / this.data.ppu;
-		this.screen.scale.x = Math.max(0.0001, this.width);
-		this.screen.scale.y = Math.max(0.0001, this.height);
-	},
+	resize() {},
 	update() {
 		this.resize();
 	},
@@ -104,12 +121,20 @@ AFRAME.registerComponent('htmlembed', {
 		if (!intersection) {
 			return;
 		}
-		const localPoint = intersection.point;
+
+		// Get the face normal of the intersected face
+		const faceNormal = intersection.face.normal.clone();
+
+		// Transform the face normal to world space
+		this.el.object3D.localToWorld(faceNormal);
+		const localPoint = intersection.point.clone();
 		this.el.object3D.worldToLocal(localPoint);
-		const w = this.width / 2;
-		const h = this.height / 2;
-		const x = Math.round((((localPoint.x + w) / this.width) * this.renderer.width) / 4);
-		const y = Math.round(((1 - (localPoint.y + h) / this.height) * this.renderer.height) / 4);
+
+		const w = this.data.width / 2;
+		const h = this.data.height / 2;
+		const x = Math.round(((localPoint.x + w) / this.data.width) * this.renderer.innerWidth);
+		const y = Math.round(((h - localPoint.y) / this.data.height) * this.renderer.innerHeight);
+
 		if (this.lastX != x || this.lastY != y) {
 			this.renderer.listener.mousemove(x, y);
 		}
