@@ -4,6 +4,8 @@ import { Listener } from './Listener';
 import { Observer } from './Observer';
 import type { ExtendedHTMLElement } from './interfaces';
 
+const SCALE = 2;
+
 export class Renderer {
 	// Image used to draw SVG to the canvas element
 	public img = new Image();
@@ -98,8 +100,8 @@ export class Renderer {
 			if (this.width != this.html.offsetWidth || this.height != this.html.offsetHeight) {
 				this.innerWidth = this.html.offsetWidth;
 				this.innerHeight = this.html.offsetHeight;
-				this.width = this.html.offsetWidth * 4;
-				this.height = this.html.offsetHeight * 4;
+				this.width = this.html.offsetWidth * SCALE;
+				this.height = this.html.offsetHeight * SCALE;
 				this.canvas.width = this.width;
 				this.canvas.height = this.height;
 				if (this.eventCallback) this.eventCallback('resized'); // Notify a resize has happened
@@ -117,7 +119,7 @@ export class Renderer {
 				this.width +
 				'" height="' +
 				this.height +
-				'" transform="scale(4,4)">' +
+				`" transform="scale(${SCALE})">` +
 				parent[0] +
 				docString +
 				parent[1] +
