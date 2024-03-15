@@ -2,13 +2,50 @@
 	import Component3d from '$lib/components/Component3d.svelte';
 	import Scene3d from '$lib/components/Scene3d.svelte';
 	import { generateAndRender } from '$lib/generator/generator';
+	import { onMount } from 'svelte';
 	import Microphone from 'virtual:icons/lucide/mic';
+	import '$lib/aframe/depthImage/depth-image';
 
-	let showComponent = true;
-	let is3d = false;
+	let showComponent = false;
+	let is3d = true;
 
 	let text: string = '';
 	let speaking = false;
+
+	let pagePosition: [number, number, number] = [0, 1.5, -0.3];
+
+	onMount(() => {
+		const scene = document.querySelector('a-scene');
+		const camera = document.getElementById('camera')!;
+		const page = document.getElementById('page')!;
+
+		setTimeout(() => {
+			const cameraPosition = camera.object3D.position;
+			console.log('enter', cameraPosition);
+
+			const pagePos = {
+				x: cameraPosition!.x,
+				y: cameraPosition!.y,
+				z: cameraPosition!.z - 0.3
+			};
+
+			page.setAttribute('position', pagePos);
+		});
+		scene.addEventListener('enter-vr', function () {
+			setTimeout(() => {
+				const cameraPosition = camera.object3D.position;
+				console.log('enter', cameraPosition);
+
+				const pagePos = {
+					x: cameraPosition!.x,
+					y: cameraPosition!.y,
+					z: cameraPosition!.z - 0.3
+				};
+
+				page.setAttribute('position', pagePos);
+			}, 1000);
+		});
+	});
 
 	let objUrl: string | undefined = undefined;
 	async function generate() {
@@ -63,6 +100,16 @@
 <button on:click={() => (is3d = !is3d)}>Toggle 3D</button>
 
 <Scene3d {is3d}>
+	<a-assets>
+		<img id="original" src="/dino.webp" />
+		<img id="depth" src="/dinodepth.jpg" />
+	</a-assets>
+
+	<a-entity
+		geometry="primitive: plane"
+		depth-image="originalImage: #original; depthImage: #depth"
+		position="0 1.5 -0.2"
+	></a-entity>
 	{#if objUrl}
 		<a-entity
 			obj-model={`obj: url(${objUrl})`}
@@ -71,7 +118,7 @@
 			scale="0.5 0.5 0.5"
 		></a-entity>
 	{/if}
-	<Component3d position={[0, 1.5, -1]} {is3d} height={1} width={1.5}>
+	<Component3d position={pagePosition} {is3d} height={0.3} width={0.5} id="page">
 		<div id="page">
 			<p>What do you want to see?</p>
 			<div class="speak-input">
@@ -82,7 +129,7 @@
 		</div>
 	</Component3d>
 	{#if showComponent}
-		<Component3d position={[0, 1.8, -0.8]} {is3d} height={0.3} width={0.3} draggable>
+		<Component3d position={[0, 1.8, -0.8]} {is3d} height={0.1} width={0.1} draggable>
 			<div id="component">{text}</div>
 		</Component3d>
 	{/if}
