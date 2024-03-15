@@ -7,10 +7,10 @@ if (typeof AFRAME === 'undefined') {
 
 const useCanvas = false;
 
-import { Renderer } from '../renderer/Renderer';
-import { RoundedBoxFlat } from './RoundedBoxFlat';
+import { HTMLImage } from './HTMLImage';
+import { RoundedBoxFlat } from '../roundedBox/RoundedBoxFlat';
 
-AFRAME.registerComponent('htmlembed', {
+AFRAME.registerComponent('html-image', {
 	schema: {
 		width: { type: 'number', default: 5 },
 		height: { type: 'number', default: 4 },
@@ -20,7 +20,7 @@ AFRAME.registerComponent('htmlembed', {
 		uStartQuadr: { type: 'number', default: 2 }
 	},
 	init: function () {
-		const renderer = new Renderer(
+		const htmlImage = new HTMLImage(
 			this.el,
 			useCanvas,
 			() => {
@@ -46,8 +46,8 @@ AFRAME.registerComponent('htmlembed', {
 				}
 			}
 		);
-		this.renderer = renderer;
-		const texture = new THREE.Texture(renderer.img);
+		this.htmlImage = htmlImage;
+		const texture = new THREE.Texture(htmlImage.img);
 		texture.minFilter = THREE.LinearMipMapLinearFilter; // Or THREE.LinearFilter
 		texture.magFilter = THREE.LinearFilter; // Or THREE.LinearFilter
 		texture.wrapS = THREE.ClampToEdgeWrapping;
@@ -85,19 +85,19 @@ AFRAME.registerComponent('htmlembed', {
 			this.raycaster = evt.detail.el;
 		});
 		this.el.addEventListener('raycaster-intersected-cleared', () => {
-			this.renderer.listener.clearHover();
+			this.htmlImage.listener.clearHover();
 			this.raycaster = null;
 		});
 		this.el.addEventListener('mousedown', (evt) => {
 			if (evt instanceof CustomEvent) {
-				this.renderer.listener.mousedown(this.lastX, this.lastY);
+				this.htmlImage.listener.mousedown(this.lastX, this.lastY);
 			} else {
 				evt.stopPropagation();
 			}
 		});
 		this.el.addEventListener('mouseup', (evt) => {
 			if (evt instanceof CustomEvent) {
-				this.renderer.listener.mouseup(this.lastX, this.lastY);
+				this.htmlImage.listener.mouseup(this.lastX, this.lastY);
 			} else {
 				evt.stopPropagation();
 			}
@@ -109,7 +109,7 @@ AFRAME.registerComponent('htmlembed', {
 		this.resize();
 	},
 	forceRender() {
-		this.renderer.forceRender();
+		this.htmlImage.forceRender();
 	},
 	tick: function () {
 		this.resize();
@@ -132,11 +132,11 @@ AFRAME.registerComponent('htmlembed', {
 
 		const w = this.data.width / 2;
 		const h = this.data.height / 2;
-		const x = Math.round(((localPoint.x + w) / this.data.width) * this.renderer.innerWidth);
-		const y = Math.round(((h - localPoint.y) / this.data.height) * this.renderer.innerHeight);
+		const x = Math.round(((localPoint.x + w) / this.data.width) * this.htmlImage.innerWidth);
+		const y = Math.round(((h - localPoint.y) / this.data.height) * this.htmlImage.innerHeight);
 
 		if (this.lastX != x || this.lastY != y) {
-			this.renderer.listener.mousemove(x, y);
+			this.htmlImage.listener.mousemove(x, y);
 		}
 		this.lastX = x;
 		this.lastY = y;

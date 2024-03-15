@@ -489,11 +489,13 @@ export class Listener {
 			cancelable: true
 		};
 		const ele = this.elementAt(x, y);
+		console.log(ele);
 		if (ele) {
 			this.activeElement = ele;
 			ele.classList.add('activehack');
 			ele.classList.remove('hoverhack');
 			ele.dispatchEvent(new MouseEvent('mousedown', mouseState));
+			ele.focus();
 		}
 		this.mousedownElement = ele;
 	}

@@ -1,8 +1,8 @@
 <script lang="ts">
 	import 'aframe';
-	import '../aframe/aframe-htmlembed-component';
-	import '../aframe/aframe-drag-drop';
-	import '../aframe/rounded-box';
+	import '../aframe/htmlImage/html-image';
+	import '../aframe/draggable/draggable';
+	import '../aframe/roundedBox/rounded-box';
 	export let is3d = false;
 
 	export let position: [number, number, number] = [0, 0, 0];
@@ -27,7 +27,7 @@
 		/>
 		<a-entity
 			class="screen"
-			htmlembed="width:{width}; height:{height}; depth: 0.01; radiusCorner: 0.01; smoothness: 15"
+			html-image="width:{width}; height:{height}; depth: 0.01; radiusCorner: 0.01; smoothness: 15"
 			{width}
 			{height}
 			style="--width:{width}; --height:{height}"

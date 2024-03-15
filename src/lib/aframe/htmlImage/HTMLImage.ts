@@ -6,7 +6,7 @@ import type { ExtendedHTMLElement } from './interfaces';
 
 const SCALE = 2;
 
-export class Renderer {
+export class HTMLImage {
 	// Image used to draw SVG to the canvas element
 	public img = new Image();
 

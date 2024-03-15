@@ -8,7 +8,6 @@ export function RoundedBoxFlat(
 	smoothness: number,
 	startQuadrant?: number
 ): THREE.BufferGeometry {
-	console.log(width, height, depth, radius, smoothness, startQuadrant);
 	let currentQuadrant = startQuadrant || 1;
 	const pi = Math.PI;
 	const indices: number[] = [];

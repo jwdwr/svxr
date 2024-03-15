@@ -1,6 +1,4 @@
-if (window.AFRAME == null) {
-	console.error('aframe not found, please import it before this component.');
-}
+import AFRAME from 'aframe';
 
 AFRAME.registerSystem('track-cursor', {
 	init: function () {
@@ -29,7 +27,7 @@ AFRAME.registerComponent('track-cursor', {
 	}
 });
 
-AFRAME.registerComponent('dragndrop', {
+AFRAME.registerComponent('draggable', {
 	dependencies: ['track-cursor'],
 	init: function () {
 		this.el.setAttribute('cursor', { rayOrigin: 'mouse' });
