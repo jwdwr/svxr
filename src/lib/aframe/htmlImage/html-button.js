@@ -84,7 +84,6 @@ AFRAME.registerComponent('html-button', {
 		this.screen = screen;
 
 		this.el.addEventListener('raycaster-intersected', (evt) => {
-			this.raycaster = evt.detail.el;
 			const materials = this.screen.material;
 			materials[0].color.set(this.data.hoverColor);
 			materials[1].color.set(this.data.hoverColor);
@@ -92,8 +91,6 @@ AFRAME.registerComponent('html-button', {
 			this.el.object3D.scale.z = 0.8;
 		});
 		this.el.addEventListener('raycaster-intersected-cleared', () => {
-			this.htmlImage.listener.clearHover();
-			this.raycaster = null;
 			const materials = this.screen.material;
 			materials[0].color.set(this.data.color);
 			materials[1].color.set(this.data.color);
@@ -107,6 +104,7 @@ AFRAME.registerComponent('html-button', {
 				evt.stopPropagation();
 			}
 			this.el.object3D.scale.z = 0.5;
+			this.el.object3D.position.z -= this.data.depth / 4;
 		});
 		this.el.addEventListener('mouseup', (evt) => {
 			if (evt instanceof CustomEvent) {
@@ -115,6 +113,7 @@ AFRAME.registerComponent('html-button', {
 				evt.stopPropagation();
 			}
 			this.el.object3D.scale.z = 1;
+			this.el.object3D.position.z += this.data.depth / 4;
 		});
 	},
 	forceRender() {

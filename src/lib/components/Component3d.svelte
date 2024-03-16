@@ -85,6 +85,7 @@
 		background-color: transparent;
 		border-radius: 16px;
 		overflow: hidden;
+		position: relative;
 	}
 
 	.content {

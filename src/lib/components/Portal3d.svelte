@@ -14,11 +14,9 @@
 	});
 
 	onDestroy(() => {
-		setTimeout(() => {
-			if (ref?.parentNode) {
-				ref.parentNode?.removeChild(ref);
-			}
-		});
+		if (ref?.parentNode) {
+			ref.parentNode?.removeChild(ref);
+		}
 	});
 </script>
 

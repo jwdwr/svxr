@@ -7,7 +7,7 @@
 	import '$lib/aframe/depthImage/depth-image';
 	import Button3d from '$lib/components/Button3d.svelte';
 
-	let showComponent = true;
+	let showComponent = false;
 	let is3d = true;
 
 	let text: string = '';
@@ -51,8 +51,8 @@
 	let objUrl: string | undefined = undefined;
 	async function generate() {
 		objUrl = await generateAndRender(text);
-		console.log('clicked');
 		showComponent = !showComponent;
+		console.log('clicked', showComponent);
 	}
 
 	async function getTranscribeToken(): Promise<string> {
@@ -121,7 +121,7 @@
 				<div class="input" contenteditable bind:innerText={text}></div>
 				<button class="speak" class:speaking on:click={speak}><Microphone /></button>
 			</div>
-			<Button3d on:click={generate} label="Click"></Button3d>
+			<Button3d onClick={generate} label="Click"></Button3d>
 		</div>
 	</Component3d>
 </Scene3d>
