@@ -3,8 +3,12 @@
 </script>
 
 {#if is3d}
-	<a-scene renderer="maxCanvasWidth: 3000; maxCanvasHeight: 3000" xr-mode-ui="XRMode: ar">
-		<slot />
+	<a-scene
+		renderer="maxCanvasWidth: 3000; maxCanvasHeight: 3000"
+		xr-mode-ui="XRMode: ar"
+		id="main-scene"
+	>
+		<a-entity id="objects" position="0 1.6 0"> <slot /></a-entity>
 
 		<a-entity id="cameraRig">
 			<a-camera id="camera"> </a-camera>

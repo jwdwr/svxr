@@ -17,7 +17,8 @@ AFRAME.registerComponent('html-image', {
 		depth: { type: 'number', default: 0.1 },
 		radiusCorner: { type: 'number', default: 0.05 },
 		smoothness: { type: 'number', default: 10 },
-		uStartQuadr: { type: 'number', default: 2 }
+		uStartQuadr: { type: 'number', default: 2 },
+		color: { type: 'color', default: '#000' }
 	},
 	init: function () {
 		const htmlImage = new HTMLImage(
@@ -69,11 +70,11 @@ AFRAME.registerComponent('html-image', {
 				transparent: true
 			}),
 			new THREE.MeshStandardMaterial({
-				color: 0xdddddd,
+				color: this.data.color,
 				transparent: true
 			}),
 			new THREE.MeshStandardMaterial({
-				color: 0xdddddd,
+				color: this.data.color,
 				transparent: true
 			})
 		];
@@ -102,17 +103,11 @@ AFRAME.registerComponent('html-image', {
 				evt.stopPropagation();
 			}
 		});
-		this.resize();
-	},
-	resize() {},
-	update() {
-		this.resize();
 	},
 	forceRender() {
 		this.htmlImage.forceRender();
 	},
 	tick: function () {
-		this.resize();
 		if (!this.raycaster) {
 			return;
 		}

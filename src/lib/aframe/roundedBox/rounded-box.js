@@ -9,7 +9,9 @@ AFRAME.registerComponent('rounded-box', {
 		depth: { type: 'number', default: 0.01 },
 		radiusCorner: { type: 'number', default: 1 },
 		smoothness: { type: 'number', default: 4 },
-		uStartQuadr: { type: 'number', default: 2 }
+		uStartQuadr: { type: 'number', default: 2 },
+		color: { type: 'color', default: '#000' },
+		opacity: { type: 'number', default: 1 }
 	},
 	init: function () {
 		const data = this.data;
@@ -24,19 +26,19 @@ AFRAME.registerComponent('rounded-box', {
 
 		const materials = [
 			new THREE.MeshStandardMaterial({
-				color: 0xdddddd,
+				color: this.data.color,
 				transparent: true,
-				opacity: 0.5
+				opacity: this.data.opacity
 			}),
 			new THREE.MeshStandardMaterial({
-				color: 0xdddddd,
+				color: this.data.color,
 				transparent: true,
-				opacity: 0.5
+				opacity: this.data.opacity
 			}),
 			new THREE.MeshStandardMaterial({
-				color: 0xdddddd,
+				color: this.data.color,
 				transparent: true,
-				opacity: 0.5
+				opacity: this.data.opacity
 			})
 		];
 

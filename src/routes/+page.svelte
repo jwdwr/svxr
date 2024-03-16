@@ -5,15 +5,16 @@
 	import { onMount } from 'svelte';
 	import Microphone from 'virtual:icons/lucide/mic';
 	import '$lib/aframe/depthImage/depth-image';
+	import Button3d from '$lib/components/Button3d.svelte';
 
-	let showComponent = false;
+	let showComponent = true;
 	let is3d = true;
 
 	let text: string = '';
 	let speaking = false;
 
-	let pagePosition: [number, number, number] = [0, 1.5, -0.3];
-
+	let pagePosition: [number, number, number] = [0, 0, -0.3];
+	/*
 	onMount(() => {
 		const scene = document.querySelector('a-scene');
 		const camera = document.getElementById('camera')!;
@@ -46,7 +47,7 @@
 			}, 1000);
 		});
 	});
-
+*/
 	let objUrl: string | undefined = undefined;
 	async function generate() {
 		objUrl = await generateAndRender(text);
@@ -100,16 +101,6 @@
 <button on:click={() => (is3d = !is3d)}>Toggle 3D</button>
 
 <Scene3d {is3d}>
-	<a-assets>
-		<img id="original" src="/dino.webp" />
-		<img id="depth" src="/dinodepth.jpg" />
-	</a-assets>
-
-	<a-entity
-		geometry="primitive: plane"
-		depth-image="originalImage: #original; depthImage: #depth"
-		position="0 1.5 -0.2"
-	></a-entity>
 	{#if objUrl}
 		<a-entity
 			obj-model={`obj: url(${objUrl})`}
@@ -118,6 +109,11 @@
 			scale="0.5 0.5 0.5"
 		></a-entity>
 	{/if}
+	{#if showComponent}
+		<Component3d position={[0, 0, -0.2]} {is3d} height={0.1} width={0.1} draggable>
+			<div id="component">test outer</div>
+		</Component3d>
+	{/if}
 	<Component3d position={pagePosition} {is3d} height={0.3} width={0.5} id="page">
 		<div id="page">
 			<p>What do you want to see?</p>
@@ -125,14 +121,9 @@
 				<div class="input" contenteditable bind:innerText={text}></div>
 				<button class="speak" class:speaking on:click={speak}><Microphone /></button>
 			</div>
-			<button on:click={generate}>Generate</button>
+			<Button3d on:click={generate} label="Click"></Button3d>
 		</div>
 	</Component3d>
-	{#if showComponent}
-		<Component3d position={[0, 1.8, -0.8]} {is3d} height={0.1} width={0.1} draggable>
-			<div id="component">{text}</div>
-		</Component3d>
-	{/if}
 </Scene3d>
 
 <style>
@@ -142,10 +133,6 @@
 		color: white;
 		height: 100%;
 		padding: 8px;
-	}
-
-	button:hover {
-		font-weight: bold;
 	}
 
 	#component {
