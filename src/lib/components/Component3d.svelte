@@ -12,23 +12,23 @@
 	export let draggable = false;
 	export let id = '';
 
-	const draggableComponent = draggable ? 'draggable' : undefined;
+	const drag = draggable ? 'true' : undefined;
 
 	const [x, y, z] = position;
 </script>
 
 {#if is3d}
 	<Portal3d>
-		<a-entity position={`${x} ${y} ${z}`} {draggableComponent} {id}>
+		<a-entity position={`${x} ${y} ${z}`} {drag} {id}>
 			<a-entity
-				rounded-box={`width: ${width + 0.02}; height: ${height + 0.02}; depth: 0.02; radiusCorner: 0.015; smoothness: 15; color: #7BC8A4`}
+				rounded-box={`width: ${width + 0.02}; height: ${height + 0.02}; depth: 0.02; radiusCorner: 0.015; smoothness: 15; color: #ddd`}
 				id="plane"
 				position={`0 0 -0.01`}
 				opacity="0.5"
 			/>
 			<a-entity
 				class="screen collidable"
-				html-image="width:{width}; height:{height}; depth: 0.01; radiusCorner: 0.01; smoothness: 15; color: #7BC8A4"
+				html-image="width:{width}; height:{height}; depth: 0.01; radiusCorner: 0.01; smoothness: 15; color: #ddd"
 				style="--width:{width}; --height:{height}"
 			>
 				<slot />

@@ -27,7 +27,7 @@ AFRAME.registerComponent('track-cursor', {
 	}
 });
 
-AFRAME.registerComponent('draggable', {
+AFRAME.registerComponent('drag', {
 	dependencies: ['track-cursor'],
 	init: function () {
 		this.el.setAttribute('cursor', { rayOrigin: 'mouse' });

@@ -5,20 +5,21 @@
 	import { onMount } from 'svelte';
 	import Microphone from 'virtual:icons/lucide/mic';
 	import '$lib/aframe/depthImage/depth-image';
+	import '$lib/aframe/spin/spin';
 	import Button3d from '$lib/components/Button3d.svelte';
 
-	let showComponent = false;
-	let is3d = true;
+	let loading = false;
+	let is3d = false;
 
-	let text: string = '';
+	let text: string = 'Enter prompt';
 	let speaking = false;
 
 	let pagePosition: [number, number, number] = [0, 0, -0.3];
-	/*
+
 	onMount(() => {
 		const scene = document.querySelector('a-scene');
 		const camera = document.getElementById('camera')!;
-		const page = document.getElementById('page')!;
+		const page = document.getElementById('objects')!;
 
 		setTimeout(() => {
 			const cameraPosition = camera.object3D.position;
@@ -32,6 +33,7 @@
 
 			page.setAttribute('position', pagePos);
 		});
+
 		scene.addEventListener('enter-vr', function () {
 			setTimeout(() => {
 				const cameraPosition = camera.object3D.position;
@@ -44,15 +46,18 @@
 				};
 
 				page.setAttribute('position', pagePos);
-			}, 1000);
+			}, 10);
 		});
 	});
-*/
+
 	let objUrl: string | undefined = undefined;
 	async function generate() {
+		if (!is3d) {
+			return alert('Please enter 3D mode to generate an object');
+		}
+		loading = true;
 		objUrl = await generateAndRender(text);
-		showComponent = !showComponent;
-		console.log('clicked', showComponent);
+		loading = false;
 	}
 
 	async function getTranscribeToken(): Promise<string> {
@@ -102,52 +107,103 @@
 		text += e.detail.value;
 	});
 
-	addEventListener('mouseup', (e) => {
-		console.log(e);
-		showKeyboard = true;
-	});
-
 	let showKeyboard = false;
+	let inputActive = false;
+
+	const startInput = () => {
+		text = '';
+		showKeyboard = true;
+		inputActive = true;
+	};
 </script>
 
-<button on:click={() => (is3d = !is3d)}>Toggle 3D</button>
-
-<Scene3d {is3d}>
-	{#if showKeyboard}
-		<a-entity id="keyboard" a-keyboard position="-0.2 0 -0.25" scale="0.5 0.5 0.5"></a-entity>
-	{/if}
-	{#if objUrl}
-		<a-entity
-			obj-model={`obj: url(${objUrl})`}
-			position="0 1.5 -0.5"
-			rotation="0 180 0"
-			scale="0.5 0.5 0.5"
-		></a-entity>
-	{/if}
-	{#if showComponent}
-		<Component3d position={[0, 0, -0.2]} {is3d} height={0.1} width={0.1} draggable>
-			<div id="component">test outer</div>
-		</Component3d>
-	{/if}
-	<Component3d position={pagePosition} {is3d} height={0.3} width={0.5} id="page">
-		<div id="page">
-			<p>What do you want to see?</p>
-			<div class="speak-input">
-				<div class="input" on:mouseup={console.log} contenteditable bind:innerText={text}></div>
-				<button class="speak" class:speaking on:click={speak}><Microphone /></button>
+<div class="page">
+	<Scene3d {is3d}>
+		{#if is3d && showKeyboard}
+			<a-entity
+				id="keyboard"
+				a-keyboard
+				position="-0.19 -0.15 -0.25"
+				scale="0.8 0.8 0.8"
+				rotation="-20 0 0"
+			></a-entity>
+		{/if}
+		{#if objUrl}
+			<a-entity
+				obj-model={`obj: url(${objUrl})`}
+				position="0.11 0.05 -0.2"
+				rotation="0 180 0"
+				scale="0.05 0.05 0.05"
+				spin
+			></a-entity>
+		{/if}
+		<Component3d position={pagePosition} {is3d} height={0.3} width={0.5} id="page">
+			<div id="page">
+				<div class="mesh">
+					<div class="mesh-generator">
+						<div>Generate an object</div>
+						<div class="speak-input">
+							<div
+								class="input"
+								on:click={startInput}
+								contenteditable
+								bind:innerText={text}
+								class:inputActive
+							>
+								<span>|</span>
+							</div>
+							<!--<button class="speak" class:speaking on:click={speak}><Microphone /></button>-->
+						</div>
+						<Button3d {is3d} onClick={generate} label="Generate"></Button3d>
+					</div>
+					<div class="mesh-arrow">→</div>
+					<div class="mesh-display">
+						<div class="mesh-message">
+							{#if !objUrl}
+								Your object will appear here
+							{/if}
+						</div>
+					</div>
+				</div>
+				<div class="bottom">
+					<button on:click={() => (is3d = !is3d)} class="button-3d">
+						{#if !is3d}Enter{:else}Exit{/if} 3D
+					</button>
+				</div>
 			</div>
-			<Button3d onClick={generate} label="Click"></Button3d>
-		</div>
-	</Component3d>
-</Scene3d>
+		</Component3d>
+		{#if loading}
+			<Component3d position={[0, -0.05, -0.2]} {is3d} height={0.05} width={0.1} draggable>
+				<div id="component">Loading...</div>
+			</Component3d>
+		{/if}
+	</Scene3d>
+</div>
 
 <style>
+	:global(body) {
+		margin: 0;
+		padding: 0;
+		height: 100vh;
+	}
+
+	.page {
+		display: flex;
+		place-content: center;
+		place-items: center;
+		background-color: #eee;
+		height: 100vh;
+	}
 	#page {
 		font-family: Arial, Helvetica, sans-serif;
 		background-color: black;
 		color: white;
 		height: 100%;
 		padding: 8px;
+		display: flex;
+		flex-direction: column;
+		gap: 64px;
+		place-items: center;
 	}
 
 	#component {
@@ -188,14 +244,87 @@
 
 		color: green;
 	}
+
+	.mesh,
+	.bottom {
+		display: flex;
+		height: 200px;
+		justify-content: space-between;
+		width: 100%;
+	}
+
+	.bottom {
+		display: flex;
+		place-content: center;
+		place-items: center;
+	}
+
+	.mesh-generator {
+		width: 200px;
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+		place-content: center;
+		place-items: center;
+		height: 200px;
+		padding: 16px;
+	}
+
+	.mesh-arrow {
+		display: flex;
+		place-content: center;
+		place-items: center;
+		font-size: 5em;
+		width: 200px;
+	}
+
+	.mesh-display {
+		height: 160px;
+		width: 200px;
+		padding: 16px;
+		display: flex;
+		text-align: center;
+	}
+
+	.mesh-message {
+		border: 1px solid white;
+		width: 100%;
+		height: 100%;
+		display: flex;
+		place-content: center;
+		padding: 16px;
+		place-items: center;
+		text-align: center;
+		border-radius: 8px;
+	}
+
 	.input {
-		border: 1px solid #000000;
-		color: black;
+		border: 1px solid #fff;
+		color: white;
 		min-width: 160px;
 		width: fit-content;
 		margin: 0;
 		padding: 4px;
-		background-color: #ffffff;
+		background-color: black;
+		border-radius: 8px;
 		-webkit-appearance: none;
+		text-align: center;
+	}
+
+	.inputActive {
+		border: 1px solid #7bc8a4;
+	}
+
+	.button-3d {
+		background-color: aqua;
+		border: none;
+		padding: 16px;
+		border-radius: 4px;
+		font-size: 1.5em;
+	}
+
+	.button-3d:hover {
+		background-color: aquamarine;
+		cursor: pointer;
 	}
 </style>

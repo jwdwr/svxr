@@ -98,24 +98,20 @@ AFRAME.registerComponent('html-button', {
 			materials[2].color.set(this.data.color);
 			this.el.object3D.scale.z = 1;
 		});
-		this.el.addEventListener('mousedown', (evt) => {
-			if (evt instanceof CustomEvent) {
-				this.htmlImage.listener.mousedown(this.lastX, this.lastY);
-			} else {
-				evt.stopPropagation();
-			}
+		this.downListener = (evt) => {
+			this.el.emit('test', null, false);
+			console.log(evt);
 			this.el.object3D.scale.z = 0.5;
 			this.el.object3D.position.z -= this.data.depth / 4;
-		});
-		this.el.addEventListener('mouseup', (evt) => {
-			if (evt instanceof CustomEvent) {
-				this.htmlImage.listener.mouseup(this.lastX, this.lastY);
-			} else {
-				evt.stopPropagation();
-			}
+		};
+		this.el.addEventListener('mousedown', this.downListener);
+
+		this.upListener = (evt) => {
+			console.log(evt);
 			this.el.object3D.scale.z = 1;
 			this.el.object3D.position.z += this.data.depth / 4;
-		});
+		};
+		this.el.addEventListener('mouseup', this.upListener);
 	},
 	forceRender() {
 		this.htmlImage.forceRender();
@@ -123,5 +119,7 @@ AFRAME.registerComponent('html-button', {
 	tick: function () {},
 	remove: function () {
 		this.el.removeObject3D('screen');
+		this.el.removeEventListener('mousedown', this.downListener);
+		this.el.removeEventListener('mouseup', this.upListener);
 	}
 });

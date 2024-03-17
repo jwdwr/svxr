@@ -6,6 +6,7 @@ export async function generateAndRender(prompt: string): Promise<string> {
 		'/render',
 		((await app.predict('/generate', [prompt, '0'])) as { data: unknown[] }).data
 	);
+	console.log(result);
 
 	return (result as { data: { url: string }[] }).data[0].url;
 }

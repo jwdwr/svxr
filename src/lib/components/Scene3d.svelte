@@ -13,8 +13,6 @@
 		<a-entity id="objects" position="0 1.6 0"> <slot /></a-entity>
 		<a-entity id="cameraRig">
 			<a-camera id="camera" wasd-controls="enabled: false"> </a-camera>
-			<a-entity id="mouseCursor" cursor="rayOrigin: mouse" raycaster="objects: .collidable"
-			></a-entity>
 			<a-entity laser-controls raycaster="objects: .collidable;"></a-entity>
 		</a-entity>
 	</a-scene>

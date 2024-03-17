@@ -1,11 +1,11 @@
 <script lang="ts">
 	import Portal3d from './Portal3d.svelte';
 	import '$lib/aframe/htmlImage/html-button';
-	import { getContext } from 'svelte';
+	import { getContext, onDestroy } from 'svelte';
 
+	export let is3d = false;
 	export let label = 'Button';
 	export let onClick = () => {};
-	export let onHover = () => {};
 
 	const { screenWidth, screenHeight, pixelDensity } = {
 		screenHeight: 0.3,
@@ -33,37 +33,38 @@
 		height = buttonHeight;
 		console.log({ width, height });
 
-		x = buttonX + buttonWidth / 2 - screenWidth / 2;
+		x = buttonX / 2 + buttonWidth / 2 - screenWidth / 2 + 0.03;
 		y = screenHeight / 2 - buttonY - buttonHeight / 2;
 	}
 
-	addEventListener('mousedown', (e) => {
+	const testCallback = (e) => {
+		console.log(e);
 		if (e.target.className.includes('container')) {
-			console.log(e);
 			onClick();
 			e.stopPropagation();
 		}
-	});
+	};
+	addEventListener('mouseup', testCallback);
 
-	addEventListener('hover', (e) => {
-		console.log(e);
-		onHover();
-		e.stopPropagation();
+	onDestroy(() => {
+		removeEventListener('mouseup', testCallback);
 	});
 </script>
 
-<button class="label" bind:this={buttonElement}>
+<button class="label" bind:this={buttonElement} on:click={onClick}>
 	{label}
 </button>
-<Portal3d>
-	<a-entity
-		position={`${x} ${y} -0.293`}
-		html-button={`width: ${width}; height: ${height}; depth: 0.005; radiusCorner: 0.002; smoothness: 15; color: #7BC8A4; hoverColor: #fff`}
-		style="--width:${width}; --height: ${height}"
-		class="container collidable"
-		><div class="label">{label}</div>
-	</a-entity>
-</Portal3d>
+{#if is3d}
+	<Portal3d>
+		<a-entity
+			position={`${x} ${y} -0.293`}
+			html-button={`width: ${width}; height: ${height}; depth: 0.005; radiusCorner: 0.002; smoothness: 15; color: #7BC8A4; hoverColor: #fff`}
+			style="--width:${width}; --height: ${height}"
+			class="container collidable"
+			><div class="label">{label}</div>
+		</a-entity>
+	</Portal3d>
+{/if}
 
 <style global>
 	.container {
@@ -75,16 +76,19 @@
 		overflow: hidden;
 	}
 	.label {
-		width: 80px;
-		height: 30px;
 		background-color: #7bc8a4;
 		display: flex;
 		place-content: center;
 		place-items: center;
 		font-size: 0.9em;
-		border-radius: 8px;
+		border-radius: 4px;
+		border: none;
+		text-align: center;
+		padding: 8px;
+		font-family: Arial, Helvetica, sans-serif;
 	}
 	.label:hover {
-		font-weight: bold;
+		background-color: #fff;
+		cursor: pointer;
 	}
 </style>
