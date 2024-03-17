@@ -46,7 +46,7 @@
 				};
 
 				page.setAttribute('position', pagePos);
-			}, 10);
+			}, 1000);
 		});
 	});
 
@@ -115,6 +115,14 @@
 		showKeyboard = true;
 		inputActive = true;
 	};
+
+	const toggle3d = () => {
+		is3d = !is3d;
+		const scene = document.querySelector('a-scene');
+		if (!is3d) {
+			scene.exitVR();
+		}
+	};
 </script>
 
 <div class="page">
@@ -166,7 +174,7 @@
 					</div>
 				</div>
 				<div class="bottom">
-					<button on:click={() => (is3d = !is3d)} class="button-3d">
+					<button on:click={toggle3d} class="button-3d">
 						{#if !is3d}Enter{:else}Exit{/if} 3D
 					</button>
 				</div>
