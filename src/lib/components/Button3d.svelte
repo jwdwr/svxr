@@ -5,6 +5,7 @@
 
 	export let label = 'Button';
 	export let onClick = () => {};
+	export let onHover = () => {};
 
 	const { screenWidth, screenHeight, pixelDensity } = {
 		screenHeight: 0.3,
@@ -43,6 +44,12 @@
 			e.stopPropagation();
 		}
 	});
+
+	addEventListener('hover', (e) => {
+		console.log(e);
+		onHover();
+		e.stopPropagation();
+	});
 </script>
 
 <button class="label" bind:this={buttonElement}>
@@ -53,7 +60,7 @@
 		position={`${x} ${y} -0.293`}
 		html-button={`width: ${width}; height: ${height}; depth: 0.005; radiusCorner: 0.002; smoothness: 15; color: #7BC8A4; hoverColor: #fff`}
 		style="--width:${width}; --height: ${height}"
-		class="container"
+		class="container collidable"
 		><div class="label">{label}</div>
 	</a-entity>
 </Portal3d>

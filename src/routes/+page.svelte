@@ -96,11 +96,26 @@
 		});
 		mediaRecorder.start(250);
 	}
+
+	document.addEventListener('a-keyboard-update', (e) => {
+		console.log(e);
+		text += e.detail.value;
+	});
+
+	addEventListener('mouseup', (e) => {
+		console.log(e);
+		showKeyboard = true;
+	});
+
+	let showKeyboard = false;
 </script>
 
 <button on:click={() => (is3d = !is3d)}>Toggle 3D</button>
 
 <Scene3d {is3d}>
+	{#if showKeyboard}
+		<a-entity id="keyboard" a-keyboard position="-0.2 0 -0.25" scale="0.5 0.5 0.5"></a-entity>
+	{/if}
 	{#if objUrl}
 		<a-entity
 			obj-model={`obj: url(${objUrl})`}
@@ -118,7 +133,7 @@
 		<div id="page">
 			<p>What do you want to see?</p>
 			<div class="speak-input">
-				<div class="input" contenteditable bind:innerText={text}></div>
+				<div class="input" on:mouseup={console.log} contenteditable bind:innerText={text}></div>
 				<button class="speak" class:speaking on:click={speak}><Microphone /></button>
 			</div>
 			<Button3d onClick={generate} label="Click"></Button3d>

@@ -84,6 +84,7 @@ AFRAME.registerComponent('html-button', {
 		this.screen = screen;
 
 		this.el.addEventListener('raycaster-intersected', (evt) => {
+			this.el.emit('hover');
 			const materials = this.screen.material;
 			materials[0].color.set(this.data.hoverColor);
 			materials[1].color.set(this.data.hoverColor);

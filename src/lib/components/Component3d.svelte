@@ -27,7 +27,7 @@
 				opacity="0.5"
 			/>
 			<a-entity
-				class="screen"
+				class="screen collidable"
 				html-image="width:{width}; height:{height}; depth: 0.01; radiusCorner: 0.01; smoothness: 15; color: #7BC8A4"
 				style="--width:{width}; --height:{height}"
 			>
