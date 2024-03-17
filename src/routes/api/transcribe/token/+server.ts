@@ -1,9 +1,11 @@
 import { json, type RequestHandler } from '@sveltejs/kit';
-import { createClient } from '@deepgram/sdk';
-import { DEEPGRAM_API_KEY, DEEPGRAM_PROJECT_ID } from '$env/static/private';
+// import { createClient } from '@deepgram/sdk';
+// import { DEEPGRAM_API_KEY, DEEPGRAM_PROJECT_ID } from '$env/static/private';
 
 export const GET: RequestHandler = async () => {
 	try {
+		throw new Error('Not implemented');
+		/*
 		if (process.env.NODE_ENV !== 'production') {
 			return json({ data: DEEPGRAM_API_KEY }, { status: 200 });
 		}
@@ -15,7 +17,7 @@ export const GET: RequestHandler = async () => {
 			comment: 'Transcription key',
 			scopes: ['usage:write']
 		});
-
+*/
 		if (result) {
 			return json({ data: result.key }, { status: 200 });
 		} else if (error) {
