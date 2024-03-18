@@ -100,8 +100,8 @@
 				<a-entity
 					id="keyboard"
 					a-keyboard
-					scale="1.2 1.2 1.2"
-					position="-0.28 -0.32 -0.25"
+					scale="0.8 0.8 0.8"
+					position="-0.2 -0.18 0"
 					rotation="-20 0 0"
 				></a-entity></Portal3d
 			>
@@ -110,7 +110,7 @@
 			<Portal3d
 				><a-entity
 					obj-model={`obj: url(${objUrl})`}
-					position="0.11 0.05 -0.2"
+					position="0.11 0.05 0.1"
 					rotation="0 180 0"
 					scale="0.05 0.05 0.05"
 					spin
@@ -153,7 +153,7 @@
 			</div>
 		</Component3d>
 		{#if loading}
-			<Component3d position={[0, -0.05, -0.2]} {is3d} height={0.05} width={0.1} draggable>
+			<Component3d position={[0, -0.05, 0.1]} {is3d} height={0.05} width={0.1} draggable>
 				<div id="component">Loading...</div>
 			</Component3d>
 		{/if}

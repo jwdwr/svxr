@@ -6,19 +6,6 @@
 		const camera = document.getElementById('camera')!;
 		const page = document.getElementById('objects')!;
 
-		setTimeout(() => {
-			const cameraPosition = camera.object3D.position;
-			console.log('enter', cameraPosition);
-
-			const pagePos = {
-				x: cameraPosition!.x,
-				y: cameraPosition!.y,
-				z: cameraPosition!.z - 0.3
-			};
-
-			page.setAttribute('position', pagePos);
-		});
-
 		scene.addEventListener('enter-vr', function () {
 			setTimeout(() => {
 				const cameraPosition = camera.object3D.position;
@@ -27,7 +14,7 @@
 				const pagePos = {
 					x: cameraPosition!.x,
 					y: cameraPosition!.y,
-					z: cameraPosition!.z - 0.3
+					z: cameraPosition!.z - 0.4
 				};
 
 				page.setAttribute('position', pagePos);
@@ -42,7 +29,7 @@
 	keyboard-shortcuts="enterVR: false"
 	id="main-scene"
 >
-	<a-entity id="objects" position="0 1.6 -0.3"> <slot /></a-entity>
+	<a-entity id="objects" position="0 1.6 -0.4"> <slot /></a-entity>
 	<a-entity id="cameraRig">
 		<a-camera id="camera" wasd-controls="enabled: false"> </a-camera>
 		<a-entity laser-controls raycaster="objects: .collidable;"></a-entity>

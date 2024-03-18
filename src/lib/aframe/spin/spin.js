@@ -7,7 +7,7 @@ AFRAME.registerComponent('spin', {
 
 	tick: function (time, timeDelta) {
 		let rotation = this.el.getAttribute('rotation');
-		rotation.y += (this.data.speed * timeDelta) / 100; // Rotate around Y-axis
+		rotation.y += (this.data.speed * timeDelta) / 10; // Rotate around Y-axis
 		this.el.setAttribute('rotation', rotation);
 	}
 });
