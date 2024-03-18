@@ -1,12 +1,14 @@
 <script lang="ts">
 	import Component3d from '$lib/components/Component3d.svelte';
-	import Scene3d from '$lib/components/Scene3d.svelte';
+	import Scene from '$lib/components/Scene.svelte';
 	import { generateAndRender } from '$lib/generator/generator';
 	import { onMount } from 'svelte';
 	import Microphone from 'virtual:icons/lucide/mic';
 	import '$lib/aframe/depthImage/depth-image';
 	import '$lib/aframe/spin/spin';
 	import Button3d from '$lib/components/Button3d.svelte';
+	import '$lib/aframe/keyboard/aframe-keyboard.min.js';
+	import Portal3d from '$lib/components/Portal3d.svelte';
 
 	let loading = false;
 	let is3d = false;
@@ -14,41 +16,7 @@
 	let text: string = 'Enter prompt';
 	let speaking = false;
 
-	let pagePosition: [number, number, number] = [0, 0, -0.3];
-
-	onMount(() => {
-		const scene = document.querySelector('a-scene');
-		const camera = document.getElementById('camera')!;
-		const page = document.getElementById('objects')!;
-
-		setTimeout(() => {
-			const cameraPosition = camera.object3D.position;
-			console.log('enter', cameraPosition);
-
-			const pagePos = {
-				x: cameraPosition!.x,
-				y: cameraPosition!.y,
-				z: cameraPosition!.z - 0.3
-			};
-
-			page.setAttribute('position', pagePos);
-		});
-
-		scene.addEventListener('enter-vr', function () {
-			setTimeout(() => {
-				const cameraPosition = camera.object3D.position;
-				console.log('enter', cameraPosition);
-
-				const pagePos = {
-					x: cameraPosition!.x,
-					y: cameraPosition!.y,
-					z: cameraPosition!.z - 0.3
-				};
-
-				page.setAttribute('position', pagePos);
-			}, 1000);
-		});
-	});
+	let pagePosition: [number, number, number] = [0, 0, 0];
 
 	let objUrl: string | undefined = undefined;
 	async function generate() {
@@ -126,24 +94,28 @@
 </script>
 
 <div class="page">
-	<Scene3d {is3d}>
+	<Scene {is3d}>
 		{#if is3d && showKeyboard}
-			<a-entity
-				id="keyboard"
-				a-keyboard
-				position="-0.19 -0.15 -0.25"
-				scale="0.8 0.8 0.8"
-				rotation="-20 0 0"
-			></a-entity>
+			<Portal3d>
+				<a-entity
+					id="keyboard"
+					a-keyboard
+					scale="1.2 1.2 1.2"
+					position="-0.28 -0.32 -0.25"
+					rotation="-20 0 0"
+				></a-entity></Portal3d
+			>
 		{/if}
 		{#if objUrl}
-			<a-entity
-				obj-model={`obj: url(${objUrl})`}
-				position="0.11 0.05 -0.2"
-				rotation="0 180 0"
-				scale="0.05 0.05 0.05"
-				spin
-			></a-entity>
+			<Portal3d
+				><a-entity
+					obj-model={`obj: url(${objUrl})`}
+					position="0.11 0.05 -0.2"
+					rotation="0 180 0"
+					scale="0.05 0.05 0.05"
+					spin
+				></a-entity></Portal3d
+			>
 		{/if}
 		<Component3d position={pagePosition} {is3d} height={0.3} width={0.5} id="page">
 			<div id="page">
@@ -185,7 +157,7 @@
 				<div id="component">Loading...</div>
 			</Component3d>
 		{/if}
-	</Scene3d>
+	</Scene>
 </div>
 
 <style>
