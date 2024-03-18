@@ -21,14 +21,16 @@
 	<Portal3d>
 		<a-entity position={`${x} ${y} ${z}`} {drag} {id}>
 			<a-entity
-				rounded-box={`width: ${width + 0.02}; height: ${height + 0.02}; depth: 0.02; radiusCorner: 0.015; smoothness: 15; color: #ddd`}
+				rounded-box={`width: ${width + 0.02}; height: ${
+					height + 0.02
+				}; depth: 0.01; radiusCorner: 0.015; smoothness: 15; color: #ddd`}
 				id="plane"
 				position={`0 0 -0.01`}
 				opacity="0.5"
 			/>
 			<a-entity
 				class="screen collidable"
-				html-image="width:{width}; height:{height}; depth: 0.01; radiusCorner: 0.01; smoothness: 15; color: #ddd"
+				html-image="width:{width}; height:{height}; depth: 0.005; radiusCorner: 0.01; smoothness: 15; color: #ddd"
 				style="--width:{width}; --height:{height}"
 			>
 				<slot />

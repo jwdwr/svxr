@@ -7,8 +7,8 @@
 	import '$lib/aframe/depthImage/depth-image';
 	import '$lib/aframe/spin/spin';
 	import Button3d from '$lib/components/Button3d.svelte';
-	import '$lib/aframe/keyboard/aframe-keyboard.min.js';
 	import Portal3d from '$lib/components/Portal3d.svelte';
+	import Keyboard from '$lib/components/Keyboard.svelte';
 
 	let loading = false;
 	let is3d = false;
@@ -70,13 +70,22 @@
 		mediaRecorder.start(250);
 	}
 
-	document.addEventListener('a-keyboard-update', (e) => {
-		console.log(e);
-		text += e.detail.value;
-	});
-
 	let showKeyboard = false;
 	let inputActive = false;
+
+	const onKeyPress = (e: Event) => {
+		if (e.detail.code === 8) {
+			text = text.slice(0, -1);
+		} else if (e.detail.code === 24) {
+			showKeyboard = false;
+			inputActive = false;
+			text = 'Enter prompt';
+		} else if ([6, 13].includes(e.detail.code)) {
+			generate();
+		} else {
+			text += e.detail.value;
+		}
+	};
 
 	const startInput = () => {
 		text = '';
@@ -96,21 +105,13 @@
 <div class="page">
 	<Scene {is3d}>
 		{#if is3d && showKeyboard}
-			<Portal3d>
-				<a-entity
-					id="keyboard"
-					a-keyboard
-					scale="0.8 0.8 0.8"
-					position="-0.2 -0.18 0"
-					rotation="-20 0 0"
-				></a-entity></Portal3d
-			>
+			<Keyboard {onKeyPress} />
 		{/if}
 		{#if objUrl}
 			<Portal3d
 				><a-entity
 					obj-model={`obj: url(${objUrl})`}
-					position="0.11 0.05 0.1"
+					position="0.15 0.07 0.05"
 					rotation="0 180 0"
 					scale="0.05 0.05 0.05"
 					spin
