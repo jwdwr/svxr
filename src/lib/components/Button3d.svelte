@@ -57,7 +57,7 @@
 {#if is3d}
 	<Portal3d>
 		<a-entity
-			position={`${x} ${y} -0.293`}
+			position={`${x} ${y} 0.007`}
 			html-button={`width: ${width}; height: ${height}; depth: 0.005; radiusCorner: 0.002; smoothness: 15; color: #7BC8A4; hoverColor: #fff`}
 			style="--width:${width}; --height: ${height}"
 			class="container collidable"
