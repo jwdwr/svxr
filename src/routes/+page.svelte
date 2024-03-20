@@ -118,7 +118,7 @@
 				></a-entity></Portal3d
 			>
 		{/if}
-		<Component3d position={pagePosition} {is3d} height={0.3} width={0.5} id="page">
+		<Component3d position={pagePosition} {is3d} height={0.6} width={1} id="page">
 			<div id="page">
 				<div class="mesh">
 					<div class="mesh-generator">
