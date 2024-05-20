@@ -80,10 +80,10 @@
 	}
 
 	.screen {
-		width: calc(var(--width) * 1600px);
-		height: calc(var(--height) * 1600px);
-		max-width: calc(var(--width) * 1600px);
-		max-height: calc(var(--height) * 1600px);
+		width: calc(var(--width) * 1280px);
+		height: calc(var(--height) * 1280px);
+		max-width: calc(var(--width) * 1280px);
+		max-height: calc(var(--height) * 1280px);
 		background-color: transparent;
 		border-radius: 16px;
 		overflow: hidden;
